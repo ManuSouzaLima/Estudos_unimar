@@ -28,7 +28,7 @@ INNER JOIN clientes
 SELECT clientes.nome, produtos.nome 
 FROM clientes
 INNER JOIN pedidos
-    ON clientes.id = produtos.clientes_id
+    ON clientes.id = pedidos.clientes_id
 INNER JOIN pedido_has_produto
     ON pedidos.id = pedido_has_produto.pedidos_id
 INNER JOIN produtos
@@ -44,12 +44,14 @@ INNER JOIN pedido_has_produto
 GROUP BY clientes.id; 
 
 -- exercicio 7 
-SELECT * FROM categorias
+SELECT categorias.nome
+FROM categorias
 LEFT JOIN produtos
-    ON produtos,categorias_id = categorias.id
+    ON produtos.categorias_id = categorias.id
 WHERE produtos.id IS NULL;
 
---exercicio 8 
+-- exercicio 8 
 SELECT COUNT(*) AS total_combinacoes -- isso exibe no fim o nome da coluna que será feito a contagem do Count
 FROM produtos 
 CROSS JOIN categorias;
+
