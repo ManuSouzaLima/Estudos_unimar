@@ -9,18 +9,18 @@ CREATE TABLE clientes(
     data_nascimento DATE NOT NULL
 );
 
-CREATE TABLE filmes(
-	id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-	categorias_id INT, 
-    FOREIGN KEY(categorias_id) REFERENCES categorias(id),
-    titulo VARCHAR(100) NOT NULL,
-    ano_lancamento DATE NOT NULL,
-    preco DECIMAL(10,2) NOT NULL
-);
-
 CREATE TABLE categorias(
 	id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 	nome VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE filmes(
+	id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+	categorias_id INT, 
+    titulo VARCHAR(100) NOT NULL,
+    ano_lancamento DATE NOT NULL,
+    preco DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY(categorias_id) REFERENCES categorias(id)
 );
 
 CREATE TABLE locacao(
@@ -40,3 +40,12 @@ CREATE TABLE locacao_has_filme(
     FOREIGN KEY(locacao_id) REFERENCES locacao(id),
     FOREIGN KEY(filmes_id) REFERENCES filmes(id)
 );
+
+INSERT INTO clientes(nome,email,telefone,data_nascimento)
+VALUES ("Emanuel","emanueltstgen@gmail.com","14996545436","18/07/2005"),
+("Gustavo","gustavotstgen@gmail.com","14986547436","16/04/2006");
+
+INSERT INTO categorias(nome)
+VALUES ("Fantasia"),("Drama"),("Açao"),("Romance"),("Super-heroi");
+
+INSERT INTO filmes; -- terminar
