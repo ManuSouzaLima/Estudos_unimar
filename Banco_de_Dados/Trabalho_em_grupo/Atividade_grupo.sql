@@ -42,10 +42,15 @@ CREATE TABLE locacao_has_filme(
 );
 
 INSERT INTO clientes(nome,email,telefone,data_nascimento)
-VALUES ("Emanuel","emanueltstgen@gmail.com","14996545436","18/07/2005"),
-("Gustavo","gustavotstgen@gmail.com","14986547436","16/04/2006");
+VALUES ("Emanuel","emanueltstgen@gmail.com","14996545436",'2005-07-18'),
+("Gustavo","gustavotstgen@gmail.com","14986547436",'2006-04-16');
 
 INSERT INTO categorias(nome)
 VALUES ("Fantasia"),("Drama"),("Açao"),("Romance"),("Super-heroi");
 
-INSERT INTO filmes; -- terminar
+INSERT INTO filmes(titulo,ano_lancamento,preco)
+VALUES ("Carros 2",'2011-06-23',43.99),
+("Toy Story",'1995-12-22',23.57),
+("Viagem ao Centro da Terra",'2008-07-11',39.99),
+("A ponte para terabitia",'2007-03-16',23.99),
+("Pantera Negra",'2007-09-25',23.99)
