@@ -44,51 +44,179 @@ CREATE TABLE locacao_has_filme(
 INSERT INTO clientes(nome,email,telefone,data_nascimento)
 VALUES ("Emanuel","emanueltstgen@gmail.com","14996545436",'2005-07-18'),
 ("Gustavo","gustavotstgen@gmail.com","14986547436",'2006-04-16'),
-("Jose","Josesfsg@gmail.com","149776547436",'2004-07-23');
+("Jose","Josesfsg@gmail.com","149776547436",'2004-07-23'),
+("Nina","nina@gmail.com","149999999999",'2006-02-15');
 
 INSERT INTO categorias(nome)
 VALUES ("Fantasia"),("Drama"),("Açao"),("Romance"),("Super-heroi");
 
 INSERT INTO filmes(titulo,ano_lancamento,preco,categorias_id)
-VALUES ("Carros 2",'2011-06-23',43.99),
-("Toy Story",'1995-12-22',23.57),
-("Viagem ao Centro da Terra",'2008-07-11',39.99),
-("A ponte para terabitia",'2007-03-16',23.99),
-("Pantera Negra",'2007-09-25',23.99);
+VALUES ("Carros 2",'2011-06-23',43.99,1),
+("Toy Story",'1995-12-22',23.57,2),
+("Viagem ao Centro da Terra",'2008-07-11',39.99,3),
+("A ponte para terabitia",'2007-03-16',23.99,4),
+("Pantera Negra",'2007-09-25',23.99,5),
+("Vida", '2017-04-27',30.00, null);
 
 INSERT INTO locacao(clientes_id,filmes_id,data_locacao,data_devolucao)
 VALUES (2,3,'2025-11-01','2025-11-10'),
 (1,4,'2025-09-25', '2025-10-25'),
 (2,2,'2024-11-01','2024-12-10'),
-(1,5,'2025-02-25', '2025-03-25');
+(2,4, '2023-5-11', '2023-06-15'),
+(1,5,'2025-02-25', '2025-03-25'),
+(3,5,'2025-6-12', '2025-07-14');
+
 
 -- Parte 2 
--- 1 - listar todos os filmes com suas respectivas categorias - FEITA
-SELECT filmes.titulo, categorias.nome
-FROM filmes 
-INNER JOIN categorias
-	ON filmes.categorias_id = categorias.id;
+-- 1 - listar todos os filmes com suas respectivas categorias - FEITO!
+	SELECT filmes.titulo, categorias.nome
+	FROM filmes 
+	INNER JOIN categorias
+		ON filmes.categorias_id = categorias.id;
     
--- 2 Liste os nomes dos clientes e as locacoes que realizaram
+-- 2 Liste os nomes dos clientes e as locações que realizaram - FEITO!
+	SELECT clientes.nome, filmes.titulo, locacao.id AS ID_Locacao
+	FROM clientes
+	INNER JOIN locacao
+		ON clientes.id = locacao.clientes_id
+	INNER JOIN filmes
+		ON filmes.id = locacao.filmes_id;
 
--- 3 Liste o nome dos clientes e os títulos dos filmes que cada um alugou - FEITA
-SELECT clientes.nome,filmes.titulo
-FROM clientes
-INNER JOIN locacao
-	ON clientes.id = locacao.clientes_id
-INNER JOIN filmes
-	ON locacao.filmes_id = filmes.id;
+-- 3 Liste o nome dos clientes e os títulos dos filmes que cada um alugou - FEITO!
+	SELECT clientes.nome,filmes.titulo
+	FROM clientes
+	INNER JOIN locacao
+		ON clientes.id = locacao.clientes_id
+	INNER JOIN filmes
+		ON locacao.filmes_id = filmes.id;
     
--- 4 Mostre o total de filmes alugados por cada cliente. - Feito
-SELECT clientes.nome, count(*) as Contagem
-FROM clientes
-INNER JOIN locacao
-	ON clientes.id = locacao.clientes_id
-GROUP BY clientes.nome;
+-- 4 Mostre o total de filmes alugados por cada cliente. - FEITO!
+	SELECT clientes.nome, count(*) as Contagem
+	FROM clientes
+	INNER JOIN locacao
+		ON clientes.id = locacao.clientes_id
+	GROUP BY clientes.nome;
 
--- 5 Mostre o total de filmes alugados por cada cliente
+-- 5 Exiba os filmes que foram alugados mais de uma vez. - FEITO!
+	SELECT filmes.titulo, COUNT(locacao.filmes_id) AS Quantidade_Alugadas
+    FROM filmes
+    INNER JOIN locacao
+		ON filmes.id = locacao.filmes_id
+	GROUP BY filmes.titulo
+    HAVING COUNT(locacao.filmes_id) > 1;
+	
+-- 6 Mostre os filmes e suas categorias, ordenando pelo ano de lançamento mais recente. - FEITO!
+	SELECT filmes.titulo, categorias.nome, filmes.ano_lancamento
+    FROM filmes
+    INNER JOIN categorias
+		ON categorias.id = filmes.categorias_id
+	ORDER BY filmes.ano_lancamento DESC;
+		
+-- 7 Liste os clientes que ainda não realizaram nenhuma locação. - FEITO!
+	SELECT clientes.nome, locacao.id
+    FROM clientes
+    LEFT JOIN locacao
+		ON clientes.id = locacao.clientes_id
+	WHERE locacao.id IS NULL;
+    
+-- 8 Exiba o nome das categorias e o preço médio dos filmes de cada uma. - FEITO!
+	SELECT categorias.nome, AVG(filmes.preco)
+	FROM categorias
+	INNER JOIN filmes
+		ON categorias.id = filmes.categorias_id
+	GROUP BY categorias.nome;
+    
+-- 9 Mostre qual cliente realizou o maior número de locações. - FEITO! OBS: Contem duas pessoas com o mesmo total de locações. - FEITO!
+	SELECT 
+		clientes.nome, COUNT(locacao.id) AS Total_Locacoes
+	FROM clientes
+	INNER JOIN locacao
+		ON clientes.id = locacao.clientes_id
+	GROUP BY clientes.nome
+	ORDER BY Total_Locacoes DESC
+	LIMIT 1;
 
--- 19 Atualize o nome de um dos clientes com UPDATE
+-- 10 Liste todas as categorias que ainda não têm filmes cadastrados. - FEITO!
+	SELECT filmes.titulo, categorias.nome
+    FROM categorias
+    RIGHT JOIN filmes
+		ON categorias.id = filmes.categorias_id
+	WHERE filmes.categorias_id IS NULL;
+        
+-- 11 Exiba os filmes que nunca foram alugados. - FEITO!
+	SELECT filmes.titulo AS Filmes
+	FROM filmes
+	LEFT JOIN locacao
+		ON filmes.id = locacao.filmes_id
+	WHERE locacao.id IS NULL;
+
+-- 12 Liste o nome dos clientes e o total gasto em todas as suas locações. - FEITO!
+	SELECT clientes.nome, SUM(filmes.preco) AS Total_gasto
+    FROM clientes
+    INNER JOIN locacao
+		ON clientes.id = locacao.clientes_id
+	INNER JOIN filmes
+		ON filmes.id = locacao.filmes_id
+	GROUP BY clientes.nome;	
+    
+-- 13 Mostre a categoria mais lucrativa, considerando a soma dos preços de todos os filmes alugados. - FEITO!
+	SELECT 
+		categorias.nome AS Categoria,
+		SUM(filmes.preco) AS Total_Lucrado
+	FROM categorias
+	INNER JOIN filmes
+		ON categorias.id = filmes.categorias_id
+	INNER JOIN locacao
+		ON filmes.id = locacao.filmes_id
+	GROUP BY categorias.nome
+	ORDER BY Total_Lucrado DESC;
+
+	
+-- 14 Liste os clientes que alugaram filmes de mais de uma categoria. - FEITO!
+	SELECT 
+		clientes.nome, COUNT(DISTINCT categorias.id) AS Qtde_Categorias_Alugadas
+	FROM clientes
+	INNER JOIN locacao
+		ON clientes.id = locacao.clientes_id
+	INNER JOIN filmes
+		ON locacao.filmes_id = filmes.id
+	INNER JOIN categorias
+		ON filmes.categorias_id = categorias.id
+	GROUP BY clientes.nome
+	HAVING COUNT(DISTINCT categorias.id) > 1;
+
+    
+-- 15 Mostre o filme mais alugado e quantas vezes ele foi alugado. - FEITO!
+	SELECT 
+		filmes.titulo AS Filme,
+		COUNT(locacao.id) AS Quantidade_Alugado
+	FROM filmes
+	INNER JOIN locacao
+		ON filmes.id = locacao.filmes_id
+	GROUP BY filmes.titulo
+	ORDER BY Quantidade_Alugado DESC
+	LIMIT 1;
+
+        
+-- 16 Liste os clientes que alugaram filmes da categoria “Terror”, mas nunca alugaram da categoria “Comédia” (Pode substituir por outros nomes de categoria) - Não é necessario!
+-- 17 Mostre o cliente que mais gastou por categoria de filme. - Não é necessario!
+
+-- 18 Mostre a média de preço dos filmes alugados por cliente, mas apenas dos que alugaram 3 ou mais filmes.
+	SELECT 
+		clientes.nome AS Nome_Cliente, AVG(filmes.preco) AS Media_Preco
+	FROM clientes
+	INNER JOIN locacao 
+		ON clientes.id = locacao.clientes_id
+	INNER JOIN filmes
+		ON locacao.filmes_id = filmes.id
+	GROUP BY clientes.nome
+	HAVING COUNT(filmes.id) >= 3;
+
+-- 19 Atualize o nome de um dos clientes com UPDATE - FEITO!
 UPDATE clientes
 SET clientes.nome = "Ricardo Alves Lopes"
 WHERE clientes.id = 1;
+
+-- 20 Exclua um dos filmes com DELETE - FEITO!
+DELETE FROM filmes
+WHERE id = 3;
