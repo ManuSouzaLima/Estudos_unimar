@@ -85,16 +85,20 @@ VALUES (1,3),
 	FROM clientes
 	INNER JOIN locacao
 		ON clientes.id = locacao.clientes_id
+	INNER JOIN locacao_has_filme
+		ON locacao.id = locacao_has_filme.locacao_id
 	INNER JOIN filmes
-		ON filmes.id = locacao.filmes_id;
+		ON filmes.id = locacao_has_filme.filmes_id;
 
 -- 3 Liste o nome dos clientes e os títulos dos filmes que cada um alugou - Concluido
 	SELECT clientes.nome,filmes.titulo
 	FROM clientes
 	INNER JOIN locacao
 		ON clientes.id = locacao.clientes_id
+	INNER JOIN locacao_has_filme
+		ON locacao.id = locacao_has_filme.locacao_id
 	INNER JOIN filmes
-		ON locacao.filmes_id = filmes.id;
+		ON locacao_has_filme.filmes_id = filmes.id;
     
 -- 4 Mostre o total de filmes alugados por cada cliente. - Concluido
 	SELECT clientes.nome, count(*) as Contagem
@@ -104,12 +108,12 @@ VALUES (1,3),
 	GROUP BY clientes.nome;
 
 -- 5 Exiba os filmes que foram alugados mais de uma vez. - Concluido
-	SELECT filmes.titulo, COUNT(locacao.filmes_id) AS Quantidade_Alugadas
+	SELECT filmes.titulo, COUNT(locacao_has_filme.filmes_id) AS Quantidade_Alugadas
     FROM filmes
-    INNER JOIN locacao
-		ON filmes.id = locacao.filmes_id
+    INNER JOIN locacao_has_filme
+		ON filmes.id = locacao_has_filme.filmes_id
 	GROUP BY filmes.titulo
-    HAVING COUNT(locacao.filmes_id) > 1;
+    HAVING COUNT(locacao_has_filme.filmes_id) > 1;
     
 -- 6 Mostre os filmes e suas categorias, ordenando pelo ano de lançamento mais recente. - Concluido
 	SELECT filmes.titulo, categorias.nome, filmes.ano_lancamento
@@ -151,17 +155,19 @@ VALUES (1,3),
 -- 11 Exiba os filmes que nunca foram alugados. - Concluido
 	SELECT filmes.titulo AS Filmes
 	FROM filmes
-	LEFT JOIN locacao
-		ON filmes.id = locacao.filmes_id
-	WHERE locacao.id IS NULL;
+	LEFT JOIN locacao_has_filme
+		ON filmes.id = locacao_has_filme.filmes_id
+	WHERE locacao_has_filme.id IS NULL;
 
 -- 12 Liste o nome dos clientes e o total gasto em todas as suas locações. - Concluido
 	SELECT clientes.nome, SUM(filmes.preco) AS Total_gasto
     FROM clientes
     INNER JOIN locacao
 		ON clientes.id = locacao.clientes_id
+	INNER JOIN locacao_has_filme
+		ON locacao.id = locacao_has_filme.locacao_id
 	INNER JOIN filmes
-		ON filmes.id = locacao.filmes_id
+		ON filmes.id = locacao_has_filme.filmes_id
 	GROUP BY clientes.nome;	
     
 -- 13 Mostre a categoria mais lucrativa, considerando a soma dos preços de todos os filmes alugados. -  Concluido
