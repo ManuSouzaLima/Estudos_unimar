@@ -217,6 +217,6 @@ UPDATE clientes
 SET clientes.nome = "Ricardo Alves Lopes"
 WHERE clientes.id = 1;
 
--- 20 Exclua um dos filmes com DELETE - Concluido
+-- 20 Exclua um dos filmes com DELETE - Concluido - Nao vai estar funcionando por que ele nao deixa excluir por conta da FK
 DELETE FROM filmes
 WHERE id = 3;
